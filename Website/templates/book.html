@@ -2,9 +2,18 @@
 {% block title %}Book Room{% endblock %}
 
 {% block content %}
-	{% for house in gh %}
-		<a href="/room?gid={{house.id}}">{{house.name}}</a>
-	{% endfor %}
+	{% if request.user.person.booked %}
+		You have already booked room {{request.user.person.room.name}}
+	{% else %}
+	<br>
+	<div class="ui centered container">
+		{% for house in gh %}
+			<button class="ui button" onclick="load('/room?gid={{house.id}}')">{{house.name}}</button>
+			{% empty %}
+				No guesthouse present.
+		{% endfor %}
+	</div>
+	{% endif %}
 
 	
 {% endblock %}

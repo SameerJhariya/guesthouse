@@ -2,7 +2,32 @@
 {% block title %}Admin{% endblock %}
 
 {% block content %}
-<a href="/book">Book Room</a><br>
-<a href="/block">Block Room</a><br>
-<a href="/changecap">Change Capacity</a><br>
+
+<div class="ui attached stackable menu">
+		<div class="ui container">
+			<a onclick='load("/book")' class="item">
+				<i class="home icon"></i> Book
+			</a>
+			{% if request.user.is_superuser %}
+				<a onclick='load("/block")' class="item">
+					<i class="grid layout icon"></i> Block/Unblock
+				</a>
+				<a onclick='load("/changecap")' class="item">
+					<i class="mail icon"></i> Room Capacity
+				</a>
+			{% endif %}
+			<a href="/logout?next=/" class="item">
+					<i class="lock icon"></i> Logout
+			</a>
+		</div>
+</div>
+
+<div id="content"></div>
+
+<script type="text/javascript">
+	function load(url){
+		$('#content').load(url);
+	}
+</script>
+
 {% endblock %}

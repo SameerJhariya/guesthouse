@@ -14,4 +14,5 @@ urlpatterns = [
     url(r'^block/$', views.block, name='block'),
     url(r'^room/$', views.room, name='room'),
     url(r'^payment/$', views.payment, name='payment'),
+    url(r'^changecap/$', views.changecap, name='changecap'),
 ]

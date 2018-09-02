@@ -1,0 +1,15 @@
+
+{% extends 'base.html' %}
+{% block title %}Block Room{% endblock %}
+
+{% block content %}
+	<br>
+	<div class="ui centered container">
+		{% for room in rooms %}
+			<button class="ui button" onclick="load('/block?rid={{room.id}}')">{{room.name}}</button>
+		{% empty %}
+			No rooms present.
+		{% endfor %}
+
+	</div>
+{% endblock %}

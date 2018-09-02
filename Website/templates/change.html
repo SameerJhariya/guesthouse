@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Change Room Capacity{% endblock %}
+
+{% block content %}
+    <br>
+    <div class="ui centered container">
+    	<form method="POST">
+            {% csrf_token %}
+            <p>
+                <label>Room Number</label>
+                <input type="text" name="room">
+            </p>
+            <p>
+                <label>New Capacity</label>
+                <input type="text" name="cap">
+            </p>
+            <button type="submit">Change</button>
+       	</form>
+    </div>
+{% endblock %}

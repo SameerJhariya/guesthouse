@@ -11,10 +11,7 @@ from .models import Person, Room, GuestHouse
 
 def index(request):
 	if request.user.is_authenticated():
-		if request.user.is_superuser:
-			return render(request, 'admin.html')
-		else:
-			return render(request, 'student.html')
+		return render(request, 'admin.html')
 	else:
 		return HttpResponseRedirect('/login')
 
@@ -49,11 +46,51 @@ def room(request):
 
 def payment(request):
 	rid = request.GET['room']
+	user = request.user.person
 	roomobj = Room.objects.get(id=rid)
 	roomobj.active = False
+	user.room = roomobj
+	user.booked = True
 	roomobj.save()
-	return HttpResponse("Room Booked Successfully!")
+	user.save()
+	return HttpResponse("<br>Room Booked Successfully!")
 
 
 def block(request):
-	return HttpResponse('Block')
+	if not request.user.is_authenticated():
+		return HttpResponseRedirect('/login')
+	if not request.user.is_superuser:
+		return HttpResponse("Unauthorized!")
+
+	if 'rid' in request.GET:
+		room = Room.objects.get(id=request.GET['rid'])
+		if(room.active):
+			room.active = False
+			room.save()
+			return HttpResponse("<br>"+str(room.name)+" room Blocked")
+		else:
+			room.active = True
+			room.save()
+			person = Person.objects.get(room=room)
+			person.booked = False
+			person.room = None
+			person.save()
+			return HttpResponse("<br>"+str(room.name)+" room Unblocked")
+	else:
+		rooms = Room.objects.all()
+		return render(request, 'block.html', {'rooms' : rooms})
+
+def changecap(request):
+	if not request.user.is_authenticated():
+		return HttpResponseRedirect('/login')
+	if not request.user.is_superuser:
+		return HttpResponse("Unauthorized!")
+
+	if request.method == 'POST' :
+		room = Room.objects.get(name=request.POST['room'])
+		room.capacity = request.POST['cap']
+		room.save()
+		return HttpResponse("<br>"+str(room.name)+" capacity changed to "+str(room.capacity))
+	else:
+		rooms = Room.objects.all()
+		return render(request, 'change.html', {'rooms' : rooms})
