@@ -5,10 +5,12 @@
 {% block content %}
 	<br>
 	<div class="ui centered container">
+		<h2>Block/Unblock Room</h2>
+		<br>
 		{% for room in rooms %}
-			<button class="ui button" onclick="load('/block?rid={{room.id}}')">{{room.name}}</button>
+			<button class="ui {% if room.active %}green{% else %}red{% endif %} button" onclick="load('/block?rid={{room.id}}')">{{room.name}}</button>
 		{% empty %}
-			No rooms present.
+			<br><div class="ui container"><div class="ui negative message"><div class="header">No rooms present.</div></div></div>
 		{% endfor %}
 
 	</div>

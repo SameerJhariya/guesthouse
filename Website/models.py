@@ -29,6 +29,14 @@ class Person(models.Model):
 	def __str__(self):
 		return self.user.username
 
+class Request(models.Model):
+	person = models.ForeignKey(Person, on_delete=models.CASCADE)
+	room = models.ForeignKey(Room, on_delete=models.CASCADE)
+	def __str__(self):
+		return self.person.user.username
+
+# To keep Person and User consistent, changes in Users are replicated in Person
+
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:

@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from .forms import UserRegistrationForm
 from django import forms
 from django.contrib.auth.models import User
-from .models import Person, Room, GuestHouse
+from .models import Person, Room, GuestHouse, Request
 
 
 
@@ -51,7 +51,9 @@ def room(request):
 
 def payment(request):
 	rid = request.GET['room']
-	user = request.user.person
+	uname = request.GET['uname']
+	raw_user = User.objects.get(username=uname)
+	user = Person.objects.get(user=raw_user)
 	roomobj = Room.objects.get(id=rid)
 	roomobj.active = False
 	user.room = roomobj
@@ -101,3 +103,60 @@ def changecap(request):
 	else:
 		rooms = Room.objects.all()
 		return render(request, 'change.html', {'rooms' : rooms})
+
+
+def request_room(request):
+	if not request.user.is_authenticated():
+		return HttpResponseRedirect('/login')
+
+	if Request.objects.filter(person=request.user.person).exists():
+			return HttpResponse('<br><div class="ui container"><div class="ui negative message"><div class="header">'+"Already requested room "+'</div></div></div>')
+
+	if 'rid' in request.GET:
+		req = Request()
+		req.person = request.user.person
+		req.room = Room.objects.get(id=request.GET['rid'])
+		req.save()
+		return HttpResponse('<br><div class="ui container"><div class="ui positive message"><div class="header">'+str(req.room.name)+" room Requested"+'</div></div></div>') 
+	else:
+		vip_count = Room.objects.filter(vip=True).filter(active=False).count()
+		if vip_count >= 3:
+			rooms = Room.objects.filter(active=True)[vip_count+1:]
+		else:
+			rooms = Room.objects.filter(active=True)[3:]
+		return render(request, 'request.html', {'rooms' : rooms})
+
+def check_request(request):
+	if not request.user.is_authenticated():
+		return HttpResponseRedirect('/login')
+	if not request.user.is_superuser:
+		return HttpResponse("Unauthorized!")
+
+	if 'uid' in request.GET:
+		status = request.GET['status']
+		req = Request.objects.get(person=request.GET['uid'])
+		user = req.person
+		roomobj = req.room
+		if status=="1":
+			roomobj.active = False
+			user.room = roomobj
+			user.booked = True
+			roomobj.save()
+			user.save()
+			req.delete()
+			return HttpResponse('<br><div class="ui container"><div class="ui positive message"><div class="header">'+str(roomobj.name)+" room Approved"+'</div></div></div>') 
+		else:
+			req.delete()
+			return HttpResponse('<br><div class="ui container"><div class="ui negative message"><div class="header">'+str(roomobj.name)+" room Rejected"+'</div></div></div>') 
+	else:
+		reqs = Request.objects.all()
+		return render(request, 'check_request.html', {'reqs' : reqs})
+
+def occupied(request):
+	if not request.user.is_authenticated():
+		return HttpResponseRedirect('/login')
+	if not request.user.is_superuser:
+		return HttpResponse("Unauthorized!")
+
+	occupied_users = Person.objects.filter(booked=True)
+	return render(request, 'occupied.html', {'users' : occupied_users})

@@ -15,4 +15,7 @@ urlpatterns = [
     url(r'^room/$', views.room, name='room'),
     url(r'^payment/$', views.payment, name='payment'),
     url(r'^changecap/$', views.changecap, name='changecap'),
+    url(r'^request/$', views.request_room, name='request_room'),  
+    url(r'^check/$', views.check_request, name='check_request'),  
+    url(r'^occupied/$', views.occupied, name='occupied'),   
 ]

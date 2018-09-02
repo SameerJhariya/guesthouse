@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Request Room{% endblock %}
+
+{% block content %}
+	<br>
+	<div class="ui centered container">
+		<h2>Request Room</h2>
+		<br>
+		{% for room in rooms %}
+			<button class="ui button" onclick="load('/request?rid={{room.id}}')">{{room.name}}</button>
+			{% empty %}
+			<br><div class="ui container"><div class="ui negative message"><div class="header">No rooms available.</div></div></div>
+		{% endfor %}
+	</div>
+
+{% endblock %}

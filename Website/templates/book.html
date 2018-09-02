@@ -2,11 +2,14 @@
 {% block title %}Book Room{% endblock %}
 
 {% block content %}
+
 	{% if request.user.person.booked %}
 		<br><div class="ui container"><div class="ui negative message"><div class="header">You have already booked room {{request.user.person.room.name}}</div></div></div>
 	{% else %}
 	<br>
 	<div class="ui centered container">
+		<h2>Book Room</h2>
+		<br>
 		{% for house in gh %}
 			<button class="ui button" onclick="load('/room?gid={{house.id}}')">{{house.name}}</button>
 			{% empty %}

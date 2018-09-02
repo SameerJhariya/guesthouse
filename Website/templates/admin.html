@@ -5,25 +5,41 @@
 
 <div class="ui attached stackable menu">
 		<div class="ui container">
-			<a onclick='load("/book")' class="item">
-				<i class="home icon"></i> Book
-			</a>
 			{% if request.user.is_superuser %}
+				<a onclick='load("/book")' class="item">
+					<i class="suitcase icon"></i> Book
+				</a>
 				<a onclick='load("/block")' class="item">
 					<i class="grid layout icon"></i> Block/Unblock
 				</a>
 				<a onclick='load("/changecap")' class="item">
-					<i class="mail icon"></i> Room Capacity
+					<i class="warehouse icon"></i> Room Capacity
+				</a>
+				<a onclick='load("/check")' class="item">
+					<i class="check circle icon"></i> Check Requests
+				</a>
+				<a onclick='load("/occupied")' class="item">
+					<i class="home icon"></i> Occupied Rooms
+				</a>
+			{% else %}
+				<a onclick='load("/request")' class="item">
+					<i class="mail icon"></i> Request
 				</a>
 			{% endif %}
+
 			<a href="/logout?next=/" class="item">
-					<i class="lock icon"></i> Logout
+					<i class="power off icon"></i> Logout
 			</a>
 		</div>
 </div>
 
 <br>
-<div class="ui container" id="content"><h2><b>VIP Count: </b>{{count}}</h2></div><br>
+<div class="ui container" id="content">
+	{% if request.user.is_superuser %}
+	<div class="ui container"><h2><b>VIP Count: </b>{{count}}</h2></div><br>
+	{% endif %}
+	<div class="ui container"><h2><b>Welcome!</b></h2></div><br>
+</div>
 <div id="loader" class="ui container lds-dual-ring"></div>
 
 <script type="text/javascript">

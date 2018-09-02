@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Check Room Request{% endblock %}
+
+{% block content %}
+<h2>Check Room Request</h2>
+<br>
+
+<table class="ui selectable celled table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Room</th>
+      <th>Approve?</th>
+      <th>Reject?</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for req in reqs %}
+      <tr>
+        <td>{{req.person.user.username}}</td>
+        <td>{{req.room.name}}</td>
+        <td><button class="ui green button" onclick='load("/check?uid={{req.person.id}}&status=1")'>Approve</button></td>
+        <td><button class="ui red button" onclick='load("/check?uid={{req.person.id}}&status=0")'>Reject</button></td>
+      </tr>
+    {% endfor %}
+  </tbody>
+
+{% endblock %}

@@ -4,11 +4,20 @@
 {% block content %}
 	<br>
 	<div class="ui centered container">
+		<h2>Select Room</h2>
+		<br>
 		{% for room in rooms %}
-			<button class="ui button" onclick="load('/payment?room={{room.id}}')">{{room.name}}</button>
+			<button class="ui button" onclick="input({{room.id}})">{{room.name}}</button>
 			{% empty %}
-			No rooms available.
+			<br><div class="ui container"><div class="ui negative message"><div class="header">No rooms available.</div></div></div>
 		{% endfor %}
 	</div>
+
+	<script type="text/javascript">
+		function input(id){
+			var username = prompt("Username to book for: ", "");
+			load('/payment?room='+id+'&uname='+username);
+		}
+	</script>
 
 {% endblock %}

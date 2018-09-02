@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Occupied Rooms{% endblock %}
+
+{% block content %}
+<h2>Occupied Room</h2>
+<br>
+
+<table class="ui selectable celled table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Room</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in users %}
+      <tr>
+        <td>{{user.user.username}}</td>
+        <td>{{user.room.name}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+
+{% endblock %}
