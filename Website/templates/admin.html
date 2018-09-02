@@ -22,11 +22,17 @@
 		</div>
 </div>
 
-<div id="content"></div>
+<br>
+<div class="ui container" id="content"><h2><b>VIP Count: </b>{{count}}</h2></div><br>
+<div id="loader" class="ui container lds-dual-ring"></div>
 
 <script type="text/javascript">
+	$("#loader").hide();
 	function load(url){
-		$('#content').load(url);
+		$("#loader").show();
+		$('#content').load(url, function(){
+			$("#loader").hide();
+		});
 	}
 </script>
 

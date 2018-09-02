@@ -5,9 +5,7 @@
 	<br>
 	<div class="ui centered container">
 		{% for room in rooms %}
-			{% if room.active == True %}
 			<button class="ui button" onclick="load('/payment?room={{room.id}}')">{{room.name}}</button>
-			{% endif %}
 			{% empty %}
 			No rooms available.
 		{% endfor %}

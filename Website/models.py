@@ -16,6 +16,7 @@ class Room(models.Model):
 	name = models.CharField(max_length=64)
 	description = models.CharField(max_length=128)
 	active = models.BooleanField(default=True)
+	vip = models.BooleanField(default=False)
 	guesthouse = models.ForeignKey(GuestHouse, on_delete=models.CASCADE, null=True)
 	capacity = models.IntegerField(default=2)
 	def __str__(self):

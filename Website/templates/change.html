@@ -4,7 +4,7 @@
 {% block content %}
     <br>
     <div class="ui centered container">
-    	<form method="POST">
+    	<form id="edit" method="POST">
             {% csrf_token %}
             <p>
                 <label>Room Number</label>
@@ -14,7 +14,28 @@
                 <label>New Capacity</label>
                 <input type="text" name="cap">
             </p>
-            <button type="submit">Change</button>
+            <button class="ui green button" type="submit">Change</button>
        	</form>
     </div>
+
+    <script type="text/javascript">
+        $("#edit").submit(function(e) {
+
+
+            var form = $(this);
+            var url = form.attr('action');
+
+            $.ajax({
+                   type: "POST",
+                   url: url,
+                   data: form.serialize(),
+                   success: function(data)
+                   {
+                       $("#content").html('<br><div class="ui container"><div class="ui positive message"><div class="header">Success!</div></div></div>');
+                   }
+                 });
+
+            e.preventDefault();
+        });
+    </script>
 {% endblock %}

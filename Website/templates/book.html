@@ -3,7 +3,7 @@
 
 {% block content %}
 	{% if request.user.person.booked %}
-		You have already booked room {{request.user.person.room.name}}
+		<br><div class="ui container"><div class="ui negative message"><div class="header">You have already booked room {{request.user.person.room.name}}</div></div></div>
 	{% else %}
 	<br>
 	<div class="ui centered container">

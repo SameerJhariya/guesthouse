@@ -10,8 +10,9 @@ from .models import Person, Room, GuestHouse
 
 
 def index(request):
+	vip_count = Room.objects.filter(vip=True).filter(active=False).count()
 	if request.user.is_authenticated():
-		return render(request, 'admin.html')
+		return render(request, 'admin.html', {"count" : vip_count})
 	else:
 		return HttpResponseRedirect('/login')
 
@@ -41,7 +42,11 @@ def book(request):
 
 def room(request):
 	gh = request.GET['gid']
-	rooms = Room.objects.filter(guesthouse=gh)
+	vip_count = Room.objects.filter(vip=True).filter(active=False).count()
+	if vip_count >= 3:
+		rooms = Room.objects.filter(guesthouse=gh).filter(active=True)[vip_count+1:]
+	else:
+		rooms = Room.objects.filter(guesthouse=gh).filter(active=True)[3:]
 	return render(request, 'room.html', {'rooms' : rooms})
 
 def payment(request):
@@ -53,7 +58,7 @@ def payment(request):
 	user.booked = True
 	roomobj.save()
 	user.save()
-	return HttpResponse("<br>Room Booked Successfully!")
+	return HttpResponse('<br><div class="ui container"><div class="ui positive message"><div class="header">Room Booked Successfully!</div></div></div>')
 
 
 def block(request):
@@ -67,15 +72,17 @@ def block(request):
 		if(room.active):
 			room.active = False
 			room.save()
-			return HttpResponse("<br>"+str(room.name)+" room Blocked")
+			return HttpResponse('<br><div class="ui container"><div class="ui positive message"><div class="header">'+str(room.name)+" room Blocked"+'</div></div></div>')
 		else:
 			room.active = True
+			room.vip = False
 			room.save()
-			person = Person.objects.get(room=room)
-			person.booked = False
-			person.room = None
-			person.save()
-			return HttpResponse("<br>"+str(room.name)+" room Unblocked")
+			persons = Person.objects.filter(room=room)
+			for person in persons:
+				person.booked = False
+				person.room = None
+				person.save()
+			return HttpResponse('<br><div class="ui container"><div class="ui positive message"><div class="header">'+str(room.name)+" room Unblocked"+'</div></div></div>')
 	else:
 		rooms = Room.objects.all()
 		return render(request, 'block.html', {'rooms' : rooms})
