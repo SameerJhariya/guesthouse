@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Select Room{% endblock %}
+
+{% block content %}
+	{% for room in rooms %}
+		{% if room.active == True %}
+		<a href="/payment?room={{room.id}}">{{room.name}}</a>
+		{% endif %}
+	{% endfor %}
+{% endblock %}

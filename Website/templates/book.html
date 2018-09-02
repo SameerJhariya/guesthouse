@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Book Room{% endblock %}
+
+{% block content %}
+	{% for house in gh %}
+		<a href="/room?gid={{house.id}}">{{house.name}}</a>
+	{% endfor %}
+
+	
+{% endblock %}

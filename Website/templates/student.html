@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Student{% endblock %}
+
+{% block content %}
+{% if request.user.person.booked %}
+Room Already Booked
+{% else %}
+	<a href="/book">Book Room</a>
+{% endif %}
+
+{% endblock %}
